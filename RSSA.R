@@ -1,7 +1,5 @@
 #Package for SSA
 install.packages("Rssa")
-
-#library(lubricate)
 library(Rssa)
 
 #Package for importing excel sheet
@@ -14,8 +12,8 @@ library(ggplot2)
 
 setwd("path to working folder")
 data <- read.xlsx("filename.xlsx",1, header = TRUE)
-date <- as.Date(data$Date)
-PiezometricSeries <- data$Piezometric.Level
+date <- as.Date(data$Date) #Date is the header of my column
+PiezometricSeries <- data$Piezometric.Level #Piezometric.Level is the header of my column
 charttitle<- basename(getwd()) #this extracts the file name and makes it the plot title
 
 # Piezometric deconstrction
@@ -39,7 +37,7 @@ df<- data.frame(date, PiezometricSeries, PiezometricTrend, Seasonality, Residual
 colors <- c("Piezometric Series" = "black", "Piezometric Trend" = "orange", "Seasonality" = "red", "Residuals" = "green")
 
 
-jpeg("outputplot.jpg",units="cm", width=25, height=15, res=300)
+jpeg("outputplot.jpg",units="cm", width=25, height=15, res=300) #this saves the plot directly in the folder
 ggplot(df, aes(date)) +                    # basic graphical object
   geom_line(aes(y = PiezometricSeries, color ="Piezometric Series")) +  # series plot
   geom_line(aes(y=PiezometricTrend,color="Piezometric Trend")) + # trend plot
@@ -53,10 +51,11 @@ ggplot(df, aes(date)) +                    # basic graphical object
 dev.off()
 
 #saving the outputs
-sink("summary.txt")
+sink("summary.txt") #this saves the summary of ssa directly in the folder
 summary(piezo_SSA)
 sink()
 
+#import the original series, the trend components and the residual in thesame excel on different sheets.
 write.xlsx(PiezometricTrend, file = "RSSAoutput.xlsx", sheetName = "Trend", append = FALSE)
 write.xlsx(Residuals, file = "RSSAoutput.xlsx", sheetName = "Residual", append = TRUE)
 write.xlsx(PiezometricSeries, file = "RSSAoutput.xlsx", sheetName = "Original_Series", append = TRUE)
